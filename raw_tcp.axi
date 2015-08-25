@@ -54,8 +54,9 @@ data_event [RAW_TCP_SERVER]
 
     string:
     {
+        // Negotiation Characters.
         stack_var char cIAC
-        stack_var char cAction
+        stack_var char cCommand
         stack_var char cOption
         stack_var char cWill
         stack_var char cWont
@@ -70,27 +71,33 @@ data_event [RAW_TCP_SERVER]
 
         if(nInitialiseTelnet)
         {
+            // Fog: We're sending somebody in to negotiate!
+            // Parse the data for the IAC character (the start of our negotiation).
             while(left_string(data.text,1) == "cIAC")
             {
                 GET_BUFFER_CHAR(data.text)
-                cAction = GET_BUFFER_CHAR(data.text)
+                cCommand = GET_BUFFER_CHAR(data.text)
                 cOption = GET_BUFFER_CHAR(data.text)
+                
                 select
                 {
-                    active(cAction == cDo):
+                    // Pew pew!
+                    // Reply to the commands as appropriate.
+                    active(cCommand == cDo):
                     {
-                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption,cIAC,cWont,cOption,cIAC,cWont,cOption,cIAC,cWont,cOption"
+                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption"
                     }
-                        
-                    active(cAction == cWill):
+
+                    active(cCommand == cWill):
                     {
-                        send_string RAW_TCP_SERVER,"cIAC,cDont,cOption,cIAC,cDont,cOption,cIAC,cDont,cOption,cIAC,cDont,cOption"
+                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption"
                     }
-                
+                                   
                     cancel_wait 'Wait For Handshake'
                     wait 10 'Wait For Handshake'
                     {
                         nInitialiseTelnet=false
+                        // Korben Dallas: Anybody else want to negotiate?
                     }
             }
 }
