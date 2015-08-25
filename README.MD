@@ -6,7 +6,9 @@ Use this to start your initial negotiation with the device and get to the text s
 
 
 It achieves this by parsing the buffer and looking for an IAC (Interpret As Command) character that is three bytes long (always 0xFF) and forms the reply string with this.
+
 It then looks for the next character (Command) (always 0xFD (Do) or 0xFB (Will)) and forms the reply string with the appropriate reponse type (always 0xFC (Won't) 0xFE (Don't)).
+
 It then looks for the next character (Option) (e.g. 0x18 (Terminal Type)) and forms the reply string with this option.
 
 
