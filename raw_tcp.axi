@@ -85,12 +85,12 @@ data_event [RAW_TCP_SERVER]
                     // Reply to the commands as appropriate.
                     active(cCommand == cDo):
                     {
-                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption"
+                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption" // Do we need to send as a 4 part long single string because of queue?
                     }
 
                     active(cCommand == cWill):
                     {
-                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption"
+                        send_string RAW_TCP_SERVER,"cIAC,cDont,cOption"
                     }
                                    
                     cancel_wait 'Wait For Handshake'
