@@ -51,10 +51,9 @@ data_event [RAW_TCP_SERVER]
     {
         nInitialiseTelnet = false
     }
-        
+
     string:
     {
-        stack_var integer nVal
         stack_var char cIAC
         stack_var char cAction
         stack_var char cOption
@@ -62,20 +61,13 @@ data_event [RAW_TCP_SERVER]
         stack_var char cWont
         stack_var char cDo
         stack_var char cDont
-        stack_var char cOptEcho
-        stack_var char cOptSupressEcho
-        stack_var integer nRxCharSearch[10]
-        stack_var integer nRxFirstChar
-        stack_var integer nRxCharLoop
-    
+
         cIAC  = $FF
         cWill = $FB
         cWont = $FC
         cDo   = $FD
         cDont = $FE
-        cOptEcho = $01
-        cOptSupressEcho = $2D
-    
+
         if(nInitialiseTelnet)
         {
             while(left_string(data.text,1) == "cIAC")
