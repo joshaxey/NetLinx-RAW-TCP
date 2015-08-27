@@ -1,3 +1,5 @@
+PROGRAM_NAME ='RAW TCP Negotiation'
+
 /*
 RAW TCP NEGOTIATION EXAMPLE FOR DEBUG REFERENCE:
 ================================================
@@ -39,6 +41,18 @@ Client   0xFF    0xFE    0x01    Don’t Echo
 Server   0xFF    0xFD    0x0A    LF End of Line
 Server                           0x0D 0x0A Welcome to the Text Protocol Server 0x0D 0x0A
 */
+
+define_device
+
+RAW_TCP_SERVER = 0:9:0
+
+
+define_variable
+
+volatile integer nInitialiseTelnet
+
+
+define_event
 
 data_event [RAW_TCP_SERVER]
 {
@@ -85,12 +99,17 @@ data_event [RAW_TCP_SERVER]
                     // Reply to the commands as appropriate.
                     active(cCommand == cDo):
                     {
-                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption" // Do we need to send as a 4 part long single string because of queue?
+                        send_string RAW_TCP_SERVER,"cIAC,cWont,cOption"
+                        // Do we need to send as a 4 part long single string because of queue? We tested below.
+                        // send_string RAW_TCP_SERVER,"cIAC,cWont,cOption,cIAC,cWont,cOption,cIAC,cWont,cOption,cIAC,cWont,cOption"
+                        
                     }
 
                     active(cCommand == cWill):
                     {
                         send_string RAW_TCP_SERVER,"cIAC,cDont,cOption"
+                        // Do we need to send as a 4 part long single string because of queue? We tested below.
+                        // send_string RAW_TCP_SERVER,"cIAC,cDont,cOption,cIAC,cDont,cOption,cIAC,cDont,cOption,cIAC,cDont,cOption"
                     }
                                    
                     cancel_wait 'Wait For Handshake'
